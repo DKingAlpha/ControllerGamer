@@ -24,6 +24,8 @@ namespace ControllerGamer
         public static ProfileConfig Config = new ProfileConfig();
         public static Profile SelectedProfile;
 
+        private static List<KeyValuePair<Profile, List<int>>> Running_Mapping = new List<KeyValuePair<Profile, List<int>>>();
+
         private FileSystemWatcher fileSystemWatcher1 = new FileSystemWatcher();
 
 
@@ -50,11 +52,11 @@ namespace ControllerGamer
         private void LoadControllerToList()
         {
             Controllers.Clear();
-            comboBox_controller.Items.Clear();
+            checkedListBox_controllerlist.Items.Clear();
             if (Controllers.LoadControllers() > 0)
                 for (int i = 0; i < Controllers.Count; i++)
                 {
-                    comboBox_controller.Items.Add(Controllers.GetController(i).Information.InstanceName);
+                    checkedListBox_controllerlist.Items.Add(Controllers.GetController(i).GetProductName(),false);
                 }
         }
 
@@ -125,10 +127,17 @@ namespace ControllerGamer
                 textBox_profilename.Text = profile.Config.ProfileName;
                 textBox_csharpsourcefilename.Text = profile.Config.CSharpSourceFileName;
                 textBox_targetprocess.Text = profile.Config.TargetProcess;
-                if (comboBox_controller.Items.Contains(profile.Config.ControllerName))
-                    comboBox_controller.SelectedIndex = comboBox_controller.Items.IndexOf(profile.Config.ControllerName);
-                else
-                    comboBox_controller.Text = profile.Config.ControllerName;
+                comboBox_controller.Text = profile.Config.ControllerName;
+                string[] supported_connames = profile.Config.ControllerName.Split(new string[1] { " && " }, StringSplitOptions.RemoveEmptyEntries);
+                comboBox_controller.Items.Clear();
+                comboBox_controller.Items.AddRange(supported_connames);
+                for (int i = 0; i < checkedListBox_controllerlist.Items.Count; i++)
+                {
+                    if (supported_connames.Contains(checkedListBox_controllerlist.Items[i]))
+                        checkedListBox_controllerlist.SetItemChecked(i, true);
+                    else
+                        checkedListBox_controllerlist.SetItemChecked(i, false);
+                }
                 richTextBox_description.Text = profile.Config.Description.Replace(@"\r\n", "\r\n").Replace(@"\n", "\n");
                 richTextBoxCSharpCode.Text = profile.Config.CSharpSourceContent;
                 IconPath = @"Profiles\" + profile.Config.ProfileID + @"\" + profile.Config.IconFileName;
@@ -143,24 +152,47 @@ namespace ControllerGamer
                 SelectedProfile = profile;
             }
         }
-        
+
+        private void button_Stop_Click(object sender, EventArgs e)
+        {
+            for(int i=Running_Mapping.Count-1; i>=0; i--)
+            {
+                var map = Running_Mapping.ElementAt(i);
+                var profile = map.Key;
+                var cons = map.Value;
+                if (profile.Config.ProfileID == SelectedProfile.Config.ProfileID)
+                {
+                    foreach (var con in cons)
+                    {
+                        Controller controller = Controllers.GetController((int)con);
+                        controller.Stop();
+                        controller.UnMapToProfile(profile);
+                    }
+                    Running_Mapping.RemoveAt(i);
+                }
+            }
+        }
+
 
         private void buttonApply_Click(object sender, EventArgs e)
         {
             DumpValues();
-
-            Controller con;
-            if (comboBox_controller.SelectedIndex < 0)
-                con = Controllers.GetController(comboBox_controller.Text);
-            else
-                con = Controllers.GetController(comboBox_controller.SelectedIndex);
-            if (con != null)
+            if (checkedListBox_controllerlist.CheckedIndices.Count > 0)
             {
-                con.Start();
-                con.MapToProfile(new Profile(Config));
+                Profile tmpprofile = new Profile(Config);
+                List<int> selected_cons = new List<int>();
+                foreach (int i in checkedListBox_controllerlist.CheckedIndices)
+                    selected_cons.Add(i);
+                foreach (var sel_con in selected_cons)
+                {
+                    Controller con = Controllers.GetController((int)sel_con);
+                    con.MapToProfile(tmpprofile);
+                    con.Start();
+                }
+                Running_Mapping.Add(new KeyValuePair<Profile, List<int>>(tmpprofile, selected_cons));
             }
             else
-                MessageBox.Show("No satisfied controller found!");
+                MessageBox.Show("No controllers selected!");
         }
 
 
@@ -209,6 +241,7 @@ namespace ControllerGamer
         }
         private void DumpValues()
         {
+            Config.ProfileID = SelectedProfile.Config.ProfileID;
             Config.ProfileName = textBox_profilename.Text;
             Config.CSharpSourceFileName = textBox_csharpsourcefilename.Text;
             Config.TargetProcess = textBox_targetprocess.Text;
@@ -371,6 +404,7 @@ namespace GameProfile
         }
             
 
+
         Point mouseOff;
         bool leftFlag;
 
@@ -435,9 +469,9 @@ namespace GameProfile
 
         }
 
-        private void button_Stop_Click(object sender, EventArgs e)
+        private void comboBox_controller_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Controllers.StopControllers();
+
         }
     }
 }

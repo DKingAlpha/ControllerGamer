@@ -135,12 +135,72 @@ namespace ControllerGamer.Libraries.Controllers
         }
     }
 
+    public class DKeyboardEventArgs : ControllerEventArgs
+    {
+        public int ID = -1;
+        public readonly bool Pressed, Released;
+
+        public override string ToString()
+        {
+            return String.Format("Button ID:{0} {1} \r\n", ID, Pressed ? "Pressed" : "Released");
+        }
+
+        public DKeyboardEventArgs(KeyboardUpdate state) : base(state)
+        {
+            ID = state.RawOffset - 48;
+            if (state.Value == 0)
+            {
+                Released = true;
+                Pressed = false;
+            }
+            else
+            {
+                Pressed = true;
+                Released = false;
+            }
+        }
+    }
+    public class DMouseEventArgs : ControllerEventArgs
+    {
+        public int ID = -1;
+        public readonly bool Pressed, Released;
+
+        public override string ToString()
+        {
+            return String.Format("Button ID:{0} {1} \r\n", ID, Pressed ? "Pressed" : "Released");
+        }
+
+        public DMouseEventArgs(MouseUpdate state) : base(state)
+        {
+            ID = state.RawOffset - 48;
+            if (state.Value == 0)
+            {
+                Released = true;
+                Pressed = false;
+            }
+            else
+            {
+                Pressed = true;
+                Released = false;
+            }
+        }
+        
+    }
+
     public class ControllerEventArgs : EventArgs
     {
         public JoystickUpdate RawState { get; }
         public ControllerEventArgs(JoystickUpdate state) : base()
         {
             RawState = state;
+        }
+        public ControllerEventArgs(KeyboardUpdate state) : base()
+        {
+           // RawState = state;
+        }
+        public ControllerEventArgs(MouseUpdate state) : base()
+        {
+            // RawState = state;
         }
 
         public override string ToString()

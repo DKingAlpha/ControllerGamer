@@ -34,6 +34,8 @@ namespace ControllerGamer
             this.components = new System.ComponentModel.Container();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.checkedListBox_controllerlist = new System.Windows.Forms.CheckedListBox();
+            this.textBox_targetprocess = new System.Windows.Forms.TextBox();
             this.button_lockunlock = new System.Windows.Forms.Button();
             this.button_Stop = new System.Windows.Forms.Button();
             this.button_Reload = new System.Windows.Forms.Button();
@@ -57,7 +59,6 @@ namespace ControllerGamer
             this.label4 = new System.Windows.Forms.Label();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.label_Exit = new System.Windows.Forms.Label();
-            this.textBox_targetprocess = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_profileicon)).BeginInit();
             this.SuspendLayout();
@@ -69,6 +70,7 @@ namespace ControllerGamer
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.Controls.Add(this.checkedListBox_controllerlist);
             this.panel1.Controls.Add(this.textBox_targetprocess);
             this.panel1.Controls.Add(this.button_lockunlock);
             this.panel1.Controls.Add(this.button_Stop);
@@ -96,12 +98,34 @@ namespace ControllerGamer
             this.panel1.Size = new System.Drawing.Size(1060, 769);
             this.panel1.TabIndex = 2;
             // 
+            // checkedListBox_controllerlist
+            // 
+            this.checkedListBox_controllerlist.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.checkedListBox_controllerlist.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkedListBox_controllerlist.ForeColor = System.Drawing.SystemColors.Window;
+            this.checkedListBox_controllerlist.FormattingEnabled = true;
+            this.checkedListBox_controllerlist.Location = new System.Drawing.Point(752, 278);
+            this.checkedListBox_controllerlist.Name = "checkedListBox_controllerlist";
+            this.checkedListBox_controllerlist.Size = new System.Drawing.Size(288, 235);
+            this.checkedListBox_controllerlist.TabIndex = 37;
+            // 
+            // textBox_targetprocess
+            // 
+            this.textBox_targetprocess.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.textBox_targetprocess.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox_targetprocess.ForeColor = System.Drawing.Color.White;
+            this.textBox_targetprocess.Location = new System.Drawing.Point(896, 158);
+            this.textBox_targetprocess.Name = "textBox_targetprocess";
+            this.textBox_targetprocess.ReadOnly = true;
+            this.textBox_targetprocess.Size = new System.Drawing.Size(144, 23);
+            this.textBox_targetprocess.TabIndex = 36;
+            // 
             // button_lockunlock
             // 
             this.button_lockunlock.BackColor = System.Drawing.Color.Silver;
             this.button_lockunlock.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_lockunlock.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_lockunlock.Location = new System.Drawing.Point(751, 454);
+            this.button_lockunlock.Location = new System.Drawing.Point(745, 697);
             this.button_lockunlock.Name = "button_lockunlock";
             this.button_lockunlock.Size = new System.Drawing.Size(139, 33);
             this.button_lockunlock.TabIndex = 35;
@@ -115,7 +139,7 @@ namespace ControllerGamer
             this.button_Stop.BackColor = System.Drawing.Color.Silver;
             this.button_Stop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_Stop.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_Stop.Location = new System.Drawing.Point(896, 454);
+            this.button_Stop.Location = new System.Drawing.Point(896, 697);
             this.button_Stop.Name = "button_Stop";
             this.button_Stop.Size = new System.Drawing.Size(144, 33);
             this.button_Stop.TabIndex = 34;
@@ -129,7 +153,7 @@ namespace ControllerGamer
             this.button_Reload.BackColor = System.Drawing.Color.Silver;
             this.button_Reload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_Reload.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_Reload.Location = new System.Drawing.Point(751, 493);
+            this.button_Reload.Location = new System.Drawing.Point(745, 736);
             this.button_Reload.Name = "button_Reload";
             this.button_Reload.Size = new System.Drawing.Size(139, 33);
             this.button_Reload.TabIndex = 33;
@@ -147,7 +171,7 @@ namespace ControllerGamer
             this.richTextBox_log.Location = new System.Drawing.Point(0, 532);
             this.richTextBox_log.Name = "richTextBox_log";
             this.richTextBox_log.ReadOnly = true;
-            this.richTextBox_log.Size = new System.Drawing.Size(1040, 234);
+            this.richTextBox_log.Size = new System.Drawing.Size(739, 234);
             this.richTextBox_log.TabIndex = 32;
             this.richTextBox_log.TabStop = false;
             this.richTextBox_log.Text = "";
@@ -159,7 +183,7 @@ namespace ControllerGamer
             this.buttonApply.BackColor = System.Drawing.Color.Silver;
             this.buttonApply.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonApply.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonApply.Location = new System.Drawing.Point(896, 493);
+            this.buttonApply.Location = new System.Drawing.Point(896, 736);
             this.buttonApply.Name = "buttonApply";
             this.buttonApply.Size = new System.Drawing.Size(144, 33);
             this.buttonApply.TabIndex = 31;
@@ -248,7 +272,7 @@ namespace ControllerGamer
             this.pictureBox_profileicon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pictureBox_profileicon.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox_profileicon.Image = global::ControllerGamer.Properties.Resources.icon;
-            this.pictureBox_profileicon.Location = new System.Drawing.Point(751, 331);
+            this.pictureBox_profileicon.Location = new System.Drawing.Point(752, 579);
             this.pictureBox_profileicon.Name = "pictureBox_profileicon";
             this.pictureBox_profileicon.Size = new System.Drawing.Size(100, 100);
             this.pictureBox_profileicon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -286,11 +310,11 @@ namespace ControllerGamer
             this.richTextBox_description.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.richTextBox_description.DetectUrls = false;
             this.richTextBox_description.ForeColor = System.Drawing.Color.White;
-            this.richTextBox_description.Location = new System.Drawing.Point(896, 275);
+            this.richTextBox_description.Location = new System.Drawing.Point(896, 535);
             this.richTextBox_description.Name = "richTextBox_description";
             this.richTextBox_description.ReadOnly = true;
             this.richTextBox_description.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Horizontal;
-            this.richTextBox_description.Size = new System.Drawing.Size(144, 156);
+            this.richTextBox_description.Size = new System.Drawing.Size(144, 144);
             this.richTextBox_description.TabIndex = 5;
             this.richTextBox_description.Text = "";
             // 
@@ -316,6 +340,7 @@ namespace ControllerGamer
             this.comboBox_controller.Name = "comboBox_controller";
             this.comboBox_controller.Size = new System.Drawing.Size(144, 25);
             this.comboBox_controller.TabIndex = 4;
+            this.comboBox_controller.SelectedIndexChanged += new System.EventHandler(this.comboBox_controller_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -355,7 +380,7 @@ namespace ControllerGamer
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.label5.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.label5.Location = new System.Drawing.Point(747, 275);
+            this.label5.Location = new System.Drawing.Point(747, 535);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(104, 24);
             this.label5.TabIndex = 21;
@@ -368,9 +393,9 @@ namespace ControllerGamer
             this.label4.ForeColor = System.Drawing.Color.DodgerBlue;
             this.label4.Location = new System.Drawing.Point(747, 236);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(68, 24);
+            this.label4.Size = new System.Drawing.Size(148, 24);
             this.label4.TabIndex = 20;
-            this.label4.Text = "Device";
+            this.label4.Text = "Support Devices";
             // 
             // imageList1
             // 
@@ -390,17 +415,6 @@ namespace ControllerGamer
             this.label_Exit.Text = "X";
             this.label_Exit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.label_Exit.Click += new System.EventHandler(this.label_Exit_Click);
-            // 
-            // textBox_targetprocess
-            // 
-            this.textBox_targetprocess.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.textBox_targetprocess.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox_targetprocess.ForeColor = System.Drawing.Color.White;
-            this.textBox_targetprocess.Location = new System.Drawing.Point(896, 158);
-            this.textBox_targetprocess.Name = "textBox_targetprocess";
-            this.textBox_targetprocess.ReadOnly = true;
-            this.textBox_targetprocess.Size = new System.Drawing.Size(144, 23);
-            this.textBox_targetprocess.TabIndex = 36;
             // 
             // CreateProfileDetail
             // 
@@ -453,5 +467,6 @@ namespace ControllerGamer
         private System.Windows.Forms.Button button_lockunlock;
         private System.Windows.Forms.Button button_Stop;
         private System.Windows.Forms.TextBox textBox_targetprocess;
+        private System.Windows.Forms.CheckedListBox checkedListBox_controllerlist;
     }
 }

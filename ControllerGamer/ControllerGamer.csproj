@@ -83,8 +83,11 @@
     <Compile Include="CreateProfileDetail.Designer.cs">
       <DependentUpon>CreateProfileDetail.cs</DependentUpon>
     </Compile>
-    <Compile Include="Libraries\Controllers\Controller.cs" />
+    <Compile Include="Libraries\Controllers\Joystick.cs" />
     <Compile Include="Libraries\Controllers\Controllers.cs" />
+    <Compile Include="Libraries\Controllers\Controller.cs" />
+    <Compile Include="Libraries\Controllers\Keyboard.cs" />
+    <Compile Include="Libraries\Controllers\Mouse.cs" />
     <Compile Include="Libraries\Controllers\Types.cs" />
     <Compile Include="Libraries\Logger.cs" />
     <Compile Include="Libraries\ProfileLoader\INI.cs" />

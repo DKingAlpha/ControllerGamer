@@ -13,18 +13,8 @@ namespace ControllerGamer.Libraries.Controllers
 
         private static void Logcon(Controller con)
         {
-            Logger.Log("Found Controller "+ controllers.IndexOf(con) +":");
-
-            Logger.Log("\tControllerName\t" + con.Information.ProductName);
-            Logger.Log("\tType\t\t" + con.Information.Type);
-            Logger.Log("\tProductGuid\t" + con.Information.ProductGuid);
-
-            Logger.Log("\tPovCount\t" + con.Capabilities.PovCount);
-            Logger.Log("\tAxeCount\t" + con.Capabilities.AxeCount);
-            Logger.Log("\tButtonCount\t" + con.Capabilities.ButtonCount);
-            Logger.Log("\tFlags\t\t" + con.Capabilities.Flags);
-
-            Logger.Log("");
+            Logger.Log("Found Controller " + controllers.IndexOf(con) + ":");
+            Logger.Log(con.GetDetail()+"\r\n");
         }
 
         public static int LoadControllers()
@@ -32,12 +22,22 @@ namespace ControllerGamer.Libraries.Controllers
             
             DirectInput dinput = new SharpDX.DirectInput.DirectInput();
 
+            // Keyboard
+            Controller kb = new Keyboard();
+            controllers.Add(kb);
+            Logcon(kb);
+
+            // Mouse
+            Controller mouse = new Mouse();
+            controllers.Add(mouse);
+            Logcon(mouse);
+
             // xbox360-like joystick
             foreach (DeviceInstance dinstance in dinput.GetDevices(DeviceType.Gamepad, DeviceEnumerationFlags.AttachedOnly))
             {
                 if (dinstance.InstanceGuid != Guid.Empty)
                 {
-                    Controller con = new Controller(dinstance.InstanceGuid);
+                    Controller con = new Joystick(dinstance.InstanceGuid);
                     controllers.Add(con);
                     Logcon(con);
                 }
@@ -48,7 +48,7 @@ namespace ControllerGamer.Libraries.Controllers
             {
                 if (dinstance.InstanceGuid != Guid.Empty)
                 {
-                    Controller con = new Controller(dinstance.InstanceGuid);
+                    Controller con = new Joystick(dinstance.InstanceGuid);
                     controllers.Add(con);
                     Logcon(con);
                 }
@@ -59,7 +59,7 @@ namespace ControllerGamer.Libraries.Controllers
             {
                 if (dinstance.InstanceGuid != Guid.Empty)
                 {
-                    Controller con = new Controller(dinstance.InstanceGuid);
+                    Controller con = new Joystick(dinstance.InstanceGuid);
                     controllers.Add(con);
                     Logcon(con);
                 }
@@ -69,7 +69,7 @@ namespace ControllerGamer.Libraries.Controllers
             {
                 if (dinstance.InstanceGuid != Guid.Empty)
                 {
-                    Controller con = new Controller(dinstance.InstanceGuid);
+                    Controller con = new Joystick(dinstance.InstanceGuid);
                     controllers.Add(con);
                     Logcon(con);
                 }
@@ -79,7 +79,7 @@ namespace ControllerGamer.Libraries.Controllers
             {
                 if (dinstance.InstanceGuid != Guid.Empty)
                 {
-                    Controller con = new Controller(dinstance.InstanceGuid);
+                    Controller con = new Joystick(dinstance.InstanceGuid);
                     controllers.Add(con);
                     Logcon(con);
                 }
@@ -114,7 +114,7 @@ namespace ControllerGamer.Libraries.Controllers
             if (controller_name.Length > 0)
             {
                 foreach (var con in controllers)
-                    if (con.Information.ProductName.ToLower().Contains(controller_name.ToLower()))
+                    if (con.GetProductName().ToLower().Contains(controller_name.ToLower()))
                         return con;
             }
             return null;
