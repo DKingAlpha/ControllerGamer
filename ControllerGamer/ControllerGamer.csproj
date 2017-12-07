@@ -59,6 +59,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Sanford.Multimedia.Midi, Version=6.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sanford.Multimedia.Midi.6.4.1\lib\net20\Sanford.Multimedia.Midi.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.4.0.1\lib\net40\SharpDX.dll</HintPath>
     </Reference>
@@ -90,6 +93,8 @@
     <Compile Include="Libraries\Controllers\Mouse.cs" />
     <Compile Include="Libraries\Controllers\Types.cs" />
     <Compile Include="Libraries\Logger.cs" />
+    <Compile Include="Libraries\NetListener\InstructionConsumer.cs" />
+    <Compile Include="Libraries\NetListener\NetListener.cs" />
     <Compile Include="Libraries\ProfileLoader\INI.cs" />
     <Compile Include="Libraries\ProfileLoader\Profile.cs" />
     <Compile Include="Libraries\ProfileLoader\ProfileManager.cs" />

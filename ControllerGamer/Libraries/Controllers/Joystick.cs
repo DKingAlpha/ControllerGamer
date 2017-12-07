@@ -62,6 +62,7 @@ namespace ControllerGamer.Libraries.Controllers
                 Running = true;
                 // start a new thread
                 thread = new Thread(_run);
+                thread.IsBackground = true;
                 thread.Start();
                 return true;
             }

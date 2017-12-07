@@ -34,6 +34,9 @@ namespace ControllerGamer
             this.components = new System.ComponentModel.Container();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button_listen = new System.Windows.Forms.Button();
+            this.textBox_port = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.checkedListBox_controllerlist = new System.Windows.Forms.CheckedListBox();
             this.textBox_targetprocess = new System.Windows.Forms.TextBox();
             this.button_lockunlock = new System.Windows.Forms.Button();
@@ -70,6 +73,9 @@ namespace ControllerGamer
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.Controls.Add(this.button_listen);
+            this.panel1.Controls.Add(this.textBox_port);
+            this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.checkedListBox_controllerlist);
             this.panel1.Controls.Add(this.textBox_targetprocess);
             this.panel1.Controls.Add(this.button_lockunlock);
@@ -95,8 +101,44 @@ namespace ControllerGamer
             this.panel1.Controls.Add(this.label4);
             this.panel1.Location = new System.Drawing.Point(62, 61);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1060, 769);
+            this.panel1.Size = new System.Drawing.Size(1060, 829);
             this.panel1.TabIndex = 2;
+            // 
+            // button_listen
+            // 
+            this.button_listen.BackColor = System.Drawing.Color.Silver;
+            this.button_listen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_listen.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button_listen.Location = new System.Drawing.Point(896, 696);
+            this.button_listen.Name = "button_listen";
+            this.button_listen.Size = new System.Drawing.Size(144, 33);
+            this.button_listen.TabIndex = 40;
+            this.button_listen.Text = "Listen";
+            this.button_listen.UseMnemonic = false;
+            this.button_listen.UseVisualStyleBackColor = false;
+            this.button_listen.Click += new System.EventHandler(this.button_listen_Click);
+            // 
+            // textBox_port
+            // 
+            this.textBox_port.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.textBox_port.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.5F);
+            this.textBox_port.ForeColor = System.Drawing.Color.White;
+            this.textBox_port.Location = new System.Drawing.Point(801, 701);
+            this.textBox_port.Name = "textBox_port";
+            this.textBox_port.Size = new System.Drawing.Size(83, 23);
+            this.textBox_port.TabIndex = 39;
+            this.textBox_port.Text = "2017";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
+            this.label6.ForeColor = System.Drawing.Color.DodgerBlue;
+            this.label6.Location = new System.Drawing.Point(748, 700);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(43, 24);
+            this.label6.TabIndex = 38;
+            this.label6.Text = "Port";
             // 
             // checkedListBox_controllerlist
             // 
@@ -108,6 +150,7 @@ namespace ControllerGamer
             this.checkedListBox_controllerlist.Name = "checkedListBox_controllerlist";
             this.checkedListBox_controllerlist.Size = new System.Drawing.Size(288, 235);
             this.checkedListBox_controllerlist.TabIndex = 37;
+            this.checkedListBox_controllerlist.SelectedValueChanged += new System.EventHandler(this.checkedListBox_controllerlist_SelectedValueChanged);
             // 
             // textBox_targetprocess
             // 
@@ -125,7 +168,7 @@ namespace ControllerGamer
             this.button_lockunlock.BackColor = System.Drawing.Color.Silver;
             this.button_lockunlock.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_lockunlock.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_lockunlock.Location = new System.Drawing.Point(745, 697);
+            this.button_lockunlock.Location = new System.Drawing.Point(745, 735);
             this.button_lockunlock.Name = "button_lockunlock";
             this.button_lockunlock.Size = new System.Drawing.Size(139, 33);
             this.button_lockunlock.TabIndex = 35;
@@ -139,7 +182,7 @@ namespace ControllerGamer
             this.button_Stop.BackColor = System.Drawing.Color.Silver;
             this.button_Stop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_Stop.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_Stop.Location = new System.Drawing.Point(896, 697);
+            this.button_Stop.Location = new System.Drawing.Point(896, 735);
             this.button_Stop.Name = "button_Stop";
             this.button_Stop.Size = new System.Drawing.Size(144, 33);
             this.button_Stop.TabIndex = 34;
@@ -153,7 +196,7 @@ namespace ControllerGamer
             this.button_Reload.BackColor = System.Drawing.Color.Silver;
             this.button_Reload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_Reload.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_Reload.Location = new System.Drawing.Point(745, 736);
+            this.button_Reload.Location = new System.Drawing.Point(745, 774);
             this.button_Reload.Name = "button_Reload";
             this.button_Reload.Size = new System.Drawing.Size(139, 33);
             this.button_Reload.TabIndex = 33;
@@ -171,7 +214,7 @@ namespace ControllerGamer
             this.richTextBox_log.Location = new System.Drawing.Point(0, 532);
             this.richTextBox_log.Name = "richTextBox_log";
             this.richTextBox_log.ReadOnly = true;
-            this.richTextBox_log.Size = new System.Drawing.Size(739, 234);
+            this.richTextBox_log.Size = new System.Drawing.Size(739, 275);
             this.richTextBox_log.TabIndex = 32;
             this.richTextBox_log.TabStop = false;
             this.richTextBox_log.Text = "";
@@ -183,7 +226,7 @@ namespace ControllerGamer
             this.buttonApply.BackColor = System.Drawing.Color.Silver;
             this.buttonApply.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonApply.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonApply.Location = new System.Drawing.Point(896, 736);
+            this.buttonApply.Location = new System.Drawing.Point(896, 774);
             this.buttonApply.Name = "buttonApply";
             this.buttonApply.Size = new System.Drawing.Size(144, 33);
             this.buttonApply.TabIndex = 31;
@@ -340,7 +383,6 @@ namespace ControllerGamer
             this.comboBox_controller.Name = "comboBox_controller";
             this.comboBox_controller.Size = new System.Drawing.Size(144, 25);
             this.comboBox_controller.TabIndex = 4;
-            this.comboBox_controller.SelectedIndexChanged += new System.EventHandler(this.comboBox_controller_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -423,7 +465,7 @@ namespace ControllerGamer
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.BackgroundImage = global::ControllerGamer.Properties.Resources.formbg;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1210, 854);
+            this.ClientSize = new System.Drawing.Size(1210, 911);
             this.Controls.Add(this.label_Exit);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -468,5 +510,8 @@ namespace ControllerGamer
         private System.Windows.Forms.Button button_Stop;
         private System.Windows.Forms.TextBox textBox_targetprocess;
         private System.Windows.Forms.CheckedListBox checkedListBox_controllerlist;
+        private System.Windows.Forms.Button button_listen;
+        private System.Windows.Forms.TextBox textBox_port;
+        private System.Windows.Forms.Label label6;
     }
 }

@@ -12,6 +12,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 using ControllerGamer.Libraries.SimInput;
+using ControllerGamer.Libraries.NetListener;
 
 namespace ControllerGamer
 {
@@ -469,8 +470,30 @@ namespace GameProfile
 
         }
 
-        private void comboBox_controller_SelectedIndexChanged(object sender, EventArgs e)
+        private void button_listen_Click(object sender, EventArgs e)
         {
+            if (button_listen.Text == "Listen")
+            {
+                NetListener.Start(int.Parse(textBox_port.Text));
+                button_listen.Text = "Unlisten";
+            }
+            else
+            {
+                NetListener.Stop();
+                button_listen.Text = "Listen";
+            }
+        }
+
+
+        private void checkedListBox_controllerlist_SelectedValueChanged(object sender, EventArgs e)
+        {
+            string constr = "";
+            foreach (var con in checkedListBox_controllerlist.CheckedItems)
+            {
+                constr += con;
+                constr += " && ";
+            }
+            comboBox_controller.Text = constr.Substring(0, constr.Length - 4);
 
         }
     }

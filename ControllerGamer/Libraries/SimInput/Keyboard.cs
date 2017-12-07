@@ -13,7 +13,7 @@ namespace ControllerGamer.Libraries.SimInput
     {
         /// <summary>
         /// Switch to use scan codes all the time without using any virtual key codes.
-        /// Change this if simulated inputs are not detected by game.
+        /// Change this if a game cannot receive simulated inputs.
         /// </summary>
         public static bool FullScanCodeMode = true;
 
