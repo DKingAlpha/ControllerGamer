@@ -58,10 +58,25 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Sanford.Multimedia.Midi, Version=6.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sanford.Multimedia.Midi.6.4.1\lib\net20\Sanford.Multimedia.Midi.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.4.0.1\lib\net40\SharpDX.dll</HintPath>
     </Reference>
@@ -90,6 +105,7 @@
     <Compile Include="Libraries\Controllers\Controllers.cs" />
     <Compile Include="Libraries\Controllers\Controller.cs" />
     <Compile Include="Libraries\Controllers\Keyboard.cs" />
+    <Compile Include="Libraries\Controllers\MIDI.cs" />
     <Compile Include="Libraries\Controllers\Mouse.cs" />
     <Compile Include="Libraries\Controllers\Types.cs" />
     <Compile Include="Libraries\Logger.cs" />
@@ -100,7 +116,9 @@
     <Compile Include="Libraries\ProfileLoader\ProfileManager.cs" />
     <Compile Include="Libraries\SimInput\DeviceUtils.cs" />
     <Compile Include="Libraries\SimInput\Keyboard.cs" />
+    <Compile Include="Libraries\SimInput\MIDI.cs" />
     <Compile Include="Libraries\SimInput\Mouse.cs" />
+    <Compile Include="Libraries\SimInput\Products\Launchpad.cs" />
     <Compile Include="Libraries\Windows\Types.cs" />
     <Compile Include="Libraries\Windows\WinAPI.cs" />
     <Compile Include="Program.cs" />
@@ -141,6 +159,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Sanford.Multimedia.Midi\Sanford.Multimedia.Midi-master\Source\Sanford.Multimedia.Midi.csproj">
+      <Project>{4269c72a-8d3a-4737-8f89-72eaa33ea9e1}</Project>
+      <Name>Sanford.Multimedia.Midi</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

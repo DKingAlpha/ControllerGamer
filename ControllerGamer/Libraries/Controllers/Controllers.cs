@@ -13,7 +13,7 @@ namespace ControllerGamer.Libraries.Controllers
 
         private static void Logcon(Controller con)
         {
-            Logger.Log("Found Controller " + controllers.IndexOf(con) + ":");
+            Logger.Log("Found Controller: " + controllers.IndexOf(con));
             Logger.Log(con.GetDetail()+"\r\n");
         }
 
@@ -84,6 +84,13 @@ namespace ControllerGamer.Libraries.Controllers
                     Logcon(con);
                 }
 
+            }
+
+            for (int i = 0; i < Sanford.Multimedia.Midi.InputDevice.DeviceCount; i++)
+            {
+                Controller con = new MIDI(i);
+                controllers.Add(con);
+                Logcon(con);
             }
 
             return controllers.Count;

@@ -1,11 +1,12 @@
-﻿using SharpDX.DirectInput;
+﻿using Sanford.Multimedia.Midi;
+using SharpDX.DirectInput;
 using System;
 
 namespace ControllerGamer.Libraries.Controllers
 {
     public class StickStatus
     {
-        public int X = 32767, Y = 32767, Z = 32767, RX = 32767, RY = 32767, RZ = 32767;
+        public int X = -1, Y = -1, Z = -1, RX = -1, RY = -1, RZ = -1;
 
         public override string ToString()
         {
@@ -116,7 +117,7 @@ namespace ControllerGamer.Libraries.Controllers
 
         public override string ToString()
         {
-            return String.Format("Button ID:{0} {1} \r\n", ID, Pressed ? "Pressed" : "Released");
+            return String.Format("Button ID:{0} {1}", ID, Pressed ? "Pressed" : "Released");
         }
 
         public ButtonEventArgs(JoystickUpdate state) : base(state)
@@ -137,42 +138,34 @@ namespace ControllerGamer.Libraries.Controllers
 
     public class DKeyboardEventArgs : ControllerEventArgs
     {
-        public int ID = -1;
+        public Key Key;
         public readonly bool Pressed, Released;
 
         public override string ToString()
         {
-            return String.Format("Button ID:{0} {1} \r\n", ID, Pressed ? "Pressed" : "Released");
+            return String.Format("Key:{0} {1}", Key.ToString(), Pressed ? "Pressed" : "Released");
         }
 
         public DKeyboardEventArgs(KeyboardUpdate state) : base(state)
         {
-            ID = state.RawOffset - 48;
-            if (state.Value == 0)
-            {
-                Released = true;
-                Pressed = false;
-            }
-            else
-            {
-                Pressed = true;
-                Released = false;
-            }
+            Key = state.Key;
+            Pressed = state.IsPressed;
+            Released = state.IsReleased;
         }
     }
     public class DMouseEventArgs : ControllerEventArgs
     {
-        public int ID = -1;
+        public MouseOffset ID;
         public readonly bool Pressed, Released;
 
         public override string ToString()
         {
-            return String.Format("Button ID:{0} {1} \r\n", ID, Pressed ? "Pressed" : "Released");
+            return String.Format("Button ID:{0} {1}", ID, Pressed ? "Pressed" : "Released");
         }
 
         public DMouseEventArgs(MouseUpdate state) : base(state)
         {
-            ID = state.RawOffset - 48;
+            ID = state.Offset;
             if (state.Value == 0)
             {
                 Released = true;
@@ -186,21 +179,106 @@ namespace ControllerGamer.Libraries.Controllers
         }
         
     }
+    public class MidiEventArgs : ControllerEventArgs
+    {
+        public readonly bool Pressed, Released;
+        public readonly InputDevice Device;
+        public readonly int Note = -1;
+        public readonly int Channel = -1;
+        public readonly int Velocity = -1;
+        public MidiEventArgs(InputDevice sender, EventArgs e) : base(e)
+        {
+            Device = sender;
+            if (e is ChannelMessageEventArgs msg)
+            {
+                Channel = msg.Message.MidiChannel;
+                Note = msg.Message.Data1;
+                Velocity = msg.Message.Data2;
+                if (msg.Message.Data2 > 0)
+                {
+                    Pressed = true;
+                    Released = false;
+                }
+                else
+                {
+                    Pressed = true;
+                    Released = false;
+                }
+            }
+        }
+
+        public override string ToString()
+        {
+            return Note != -1 ? 
+                String.Format("Note:{0} {1}   Velocity:{2}", Note.ToString(), Pressed ? "Pressed" : "Released", ((ChannelMessageEventArgs)RawState).Message.Data2) 
+                :
+                ToFullString();
+        }
+
+        public string ToFullString()
+        {
+            string res = "";
+            if (RawState is ChannelMessageEventArgs)
+            {
+                ChannelMessageEventArgs msg = (ChannelMessageEventArgs)RawState;
+                res += "MessageType: " + msg.Message.MessageType.ToString() + "\t";
+                res += "Command: " + msg.Message.Command.ToString() + "\t";
+                res += "Channel: " + msg.Message.MidiChannel.ToString() + "\t";
+                res += "Note: " + msg.Message.Data1.ToString() + "\t";
+                res += "Velocity: " + msg.Message.Data2.ToString();
+            }
+            if (RawState is SysExMessageEventArgs)
+            {
+                SysExMessageEventArgs msg = (SysExMessageEventArgs)RawState;
+                res += "MessageType: " + msg.Message.MessageType.ToString() + "\t";
+                res += "SysExType: " + msg.Message.SysExType.ToString() + "\t";
+                res += "RawBytes(Hex): ";
+                foreach (byte b in msg.Message)
+                    res += string.Format("{0:X2} ", b);
+            }
+
+            if (RawState is SysCommonMessageEventArgs)
+            {
+                SysCommonMessageEventArgs msg = (SysCommonMessageEventArgs)RawState;
+                res += "MessageType: " + msg.Message.MessageType.ToString() + "\t";
+                res += "SysCommonType: " + msg.Message.SysCommonType.ToString() + "\t";
+                res += msg.Message.Data1.ToString() + msg.Message.Data2.ToString();
+                res += msg.Message.Data2.ToString();
+            }
+
+            if (RawState is SysRealtimeMessageEventArgs)
+            {
+                SysRealtimeMessageEventArgs msg = (SysRealtimeMessageEventArgs)RawState;
+                res += msg.Message.MessageType.ToString() + "\t";
+                res += "SysRealtimeType: " + msg.Message.SysRealtimeType.ToString();
+            }
+
+            return res;
+        }
+    }
+
 
     public class ControllerEventArgs : EventArgs
     {
-        public JoystickUpdate RawState { get; }
+        public object RawState { get; }
+        public object AdditionalData = null;
+        
         public ControllerEventArgs(JoystickUpdate state) : base()
         {
             RawState = state;
         }
         public ControllerEventArgs(KeyboardUpdate state) : base()
         {
-           // RawState = state;
+            RawState = state;
         }
         public ControllerEventArgs(MouseUpdate state) : base()
         {
-            // RawState = state;
+             RawState = state;
+        }
+
+        public ControllerEventArgs(EventArgs state) : base()
+        {
+            RawState = state;
         }
 
         public override string ToString()

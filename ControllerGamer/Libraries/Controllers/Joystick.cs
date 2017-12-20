@@ -16,7 +16,7 @@ namespace ControllerGamer.Libraries.Controllers
         
         private StickStatus LastStickStatus = new StickStatus();
 
-        event ControllerEventHandler EventReceived;
+        private event ControllerEventHandler EventReceived;
 
         public Joystick(Guid guid) : base(new DirectInput(),guid)
         {
@@ -61,8 +61,10 @@ namespace ControllerGamer.Libraries.Controllers
                 // restart. previous thread will automatically exit.
                 Running = true;
                 // start a new thread
-                thread = new Thread(_run);
-                thread.IsBackground = true;
+                thread = new Thread(_run)
+                {
+                    IsBackground = true
+                };
                 thread.Start();
                 return true;
             }
@@ -83,24 +85,28 @@ namespace ControllerGamer.Libraries.Controllers
 
         public void MapToProfile(Profile profile)
         {
-            if(profile.Compile())
+            if (!profile.IsCompiled)
+                profile.Compile();
+            if (profile.IsCompiled)
                 EventReceived += profile.OnEventReceived;
         }
         public void UnMapToProfile(Profile profile)
         {
+            if (!profile.IsCompiled)
+                profile.Compile();
             if (profile.IsCompiled)
                 EventReceived -= profile.OnEventReceived;
         }
         public string GetDetail()
         {
             string res = "";
-            res = res + "\tControllerName\t" + Information.ProductName;
-            res = res + "\tType\t\t" + Information.Type;
-            res = res + "\tProductGuid\t" + Information.ProductGuid;
-            res = res + "\tPovCount\t" + Capabilities.PovCount;
-            res = res + "\tAxeCount\t" + Capabilities.AxeCount;
-            res = res + "\tButtonCount\t" + Capabilities.ButtonCount;
-            res = res + "\tFlags\t\t" + Capabilities.Flags;
+            res = res + "ControllerName: " + Information.ProductName + "\r\n";
+            res = res + "Type: " + Information.Type + "\r\n";
+            res = res + "ProductGuid: " + Information.ProductGuid + "\r\n";
+            res = res + "PovCount: " + Capabilities.PovCount + "\r\n";
+            res = res + "AxeCount: " + Capabilities.AxeCount + "\r\n";
+            res = res + "ButtonCount: " + Capabilities.ButtonCount + "\r\n";
+            res = res + "Flags: " + Capabilities.Flags + "\r\n";
 
             return res;
         }

@@ -94,6 +94,8 @@ namespace ControllerGamer.Libraries.NetListener
                 }
                 catch (Exception e)
                 {
+                    Logger.Log(e);
+                    Logger.Log(e.StackTrace);
                     client.Close();
                     break;
                 }

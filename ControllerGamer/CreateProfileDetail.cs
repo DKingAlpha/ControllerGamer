@@ -177,23 +177,34 @@ namespace ControllerGamer
 
         private void buttonApply_Click(object sender, EventArgs e)
         {
-            DumpValues();
-            if (checkedListBox_controllerlist.CheckedIndices.Count > 0)
+            if (Running_Mapping.Count == 0)
             {
-                Profile tmpprofile = new Profile(Config);
-                List<int> selected_cons = new List<int>();
-                foreach (int i in checkedListBox_controllerlist.CheckedIndices)
-                    selected_cons.Add(i);
-                foreach (var sel_con in selected_cons)
+                DumpValues();
+                if (checkedListBox_controllerlist.CheckedIndices.Count > 0)
                 {
-                    Controller con = Controllers.GetController((int)sel_con);
-                    con.MapToProfile(tmpprofile);
-                    con.Start();
+                    Profile tmpprofile = new Profile(Config);
+                    tmpprofile.Compile();
+                    if (tmpprofile.IsValid && tmpprofile.IsCompiled)
+                    {
+                        List<int> selected_cons = new List<int>();
+                        foreach (int i in checkedListBox_controllerlist.CheckedIndices)
+                            selected_cons.Add(i);
+                        foreach (var sel_con in selected_cons)
+                        {
+                            Controller con = Controllers.GetController((int)sel_con);
+                            con.MapToProfile(tmpprofile);
+                            con.Start();
+                        }
+                        Running_Mapping.Add(new KeyValuePair<Profile, List<int>>(tmpprofile, selected_cons));
+                    }
+                    else
+                    {
+                        Logger.Log("Profile is InValid or UnCompiled");
+                    }
                 }
-                Running_Mapping.Add(new KeyValuePair<Profile, List<int>>(tmpprofile, selected_cons));
+                else
+                    MessageBox.Show("No controllers selected!");
             }
-            else
-                MessageBox.Show("No controllers selected!");
         }
 
 
@@ -394,13 +405,14 @@ namespace GameProfile
             textBox_csharpsourcefilename.Text = "";
             richTextBox_description.Text = "";
             richTextBoxCSharpCode.Text = "";
-            richTextBox_log.Text = "";
+            //richTextBox_log.Text = "";
             IconPath = null;
         }
 
         private void buttonDelete_Click(object sender, EventArgs e)
         {
             //ProfileManager.DeleteProfile(SelectedProfile.ProfileID);
+            LoadControllerToList();
             LoadProfileToList();
         }
             
@@ -438,6 +450,7 @@ namespace GameProfile
 
         private void button_Reload_Click(object sender, EventArgs e)
         {
+            LoadControllerToList();
             LoadProfileToList();
         }
 
@@ -493,7 +506,7 @@ namespace GameProfile
                 constr += con;
                 constr += " && ";
             }
-            comboBox_controller.Text = constr.Substring(0, constr.Length - 4);
+            if(constr.Length>=4) comboBox_controller.Text = constr.Substring(0, constr.Length - 4);
 
         }
     }

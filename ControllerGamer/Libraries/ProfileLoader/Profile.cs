@@ -8,6 +8,7 @@ using System.CodeDom.Compiler;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace ControllerGamer.Libraries.ProfileLoader
 {
@@ -130,18 +131,34 @@ namespace ControllerGamer.Libraries.ProfileLoader
             }
         }
 
-        [STAThread]
         public void OnEventReceived(ControllerEventArgs controllerEventArgs)
         {
+            // push sender path as additional info
+            controllerEventArgs.AdditionalData = string.Format("Profiles\\{0}", Config.ProfileID);
             object[] args = { controllerEventArgs };
+
             // default
             string CallbackName = "OnEventReceived";
 
             if (controllerEventArgs is StickEventArgs) CallbackName = "OnStickEventReceived";
             if (controllerEventArgs is DPadEventArgs) CallbackName = "OnDPadEventReceived";
             if (controllerEventArgs is ButtonEventArgs) CallbackName = "OnButtonEventReceived";
+            if (controllerEventArgs is DKeyboardEventArgs) CallbackName = "OnKeyboardEventReceived";
+            if (controllerEventArgs is DMouseEventArgs) CallbackName = "OnMouseEventReceived";
+            if (controllerEventArgs is MidiEventArgs) CallbackName = "OnMidiEventReceived";
 
-            MethodCaller.GetMethod(CallbackName).Invoke(obj: ProfileProgram, parameters: args);
+            new Thread(() =>
+            {
+                MethodInfo mi = MethodCaller.GetMethod(CallbackName);
+                if (mi != null)
+                    mi.Invoke(obj: ProfileProgram, parameters: args);
+                else
+                {
+                    mi = MethodCaller.GetMethod("OnEventReceived");
+                    if (mi != null)
+                        mi.Invoke(obj: ProfileProgram, parameters: args);
+                }
+            }).Start();
         }
         
     }
