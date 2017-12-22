@@ -13,6 +13,7 @@ namespace ControllerGamer.Libraries.SimInput
     public class Launchpad
     {
         public MIDI Midi = null;
+        public int Channel = 0;
 
         public Launchpad(MIDI _midi)
         {
@@ -25,6 +26,8 @@ namespace ControllerGamer.Libraries.SimInput
             Midi.Send(240, 0, 32, 41, 2, 16, 44, 3, 247);       // programmer mode.
 
         }
+
+        #region Midifile Note to Launchpad Note
 
         private int[] note_button_map = {
             91, 92, 93, 94, 95, 96, 97, 98, 11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 43, 44,
@@ -50,7 +53,21 @@ namespace ControllerGamer.Libraries.SimInput
                 if (note_button_map[i] == button) return i + note_button_offset;
             return 0;
         }
+        #endregion
 
+
+        private void SendSysEx(params object[] content)
+        {
+            // sysex begin
+            List<byte> msg = new List<byte>() { 0xF0, 0x00, 0x20, 0x29, 0x02, 0x10 };
+            // content
+            foreach (var c in content)
+            {
+                msg.Add((byte)c);
+            }
+            // sysex end
+            msg.Add(247);
+        }
 
         /// <summary>
         /// Set the color of a key/button.
@@ -58,14 +75,14 @@ namespace ControllerGamer.Libraries.SimInput
         /// <param name="channel">0-7</param>
         /// <param name="note">8x8 keys + 8x4 buttons </param>
         /// <param name="color">Color 0-127</param>
-        public void SetColor(int channel, int note, int color)
+        public void SetColor(int note, int color)
         {
-            if (Midi.DeviceID != -1)
+            if (Midi.DeviceID != -1 && note>=0)
             {
                 ChannelMessageBuilder cmb = new ChannelMessageBuilder
                 {
                     Command = ChannelCommand.NoteOn,
-                    MidiChannel = channel,
+                    MidiChannel = Channel,
                     Data1 = note,
                     Data2 = color
                 };
@@ -74,65 +91,76 @@ namespace ControllerGamer.Libraries.SimInput
             }
         }
 
-        public void SetColor(int note, int color)
+        public void SetColor(int note, System.Drawing.Color color)
         {
-            SetColor(0, note, color);
+            SetColor(note, color.R, color.G, color.B);
+        }
+
+        public void SetColor(int note, int r, int g, int b)
+        {
+            SendSysEx(11, note, r, g, b);
+        }
+
+        public void PulseColor(int note, int color)
+        {
+            SendSysEx(40, note, color);
+        }
+        public void StopPulseColor(int note)
+        {
+            SendSysEx(40, note, 0);
+        }
+
+        public void SetFlashColor(int note, int color)
+        {
+            SendSysEx(35, note, color);
+        }
+        public void UnsetFlashColor(int note)
+        {
+            SendSysEx(35, note, 0);
         }
 
 
-        public void UnsetColor(int channel, int note)
+        public void SetPadColor(int color)
         {
-            SetColor(0, note, 0);
+            SendSysEx(14, (byte)color);
         }
 
-        public void UnsetColor(int note)
+        public void ClearPad()
         {
-            UnsetColor(0, note);
+            SendSysEx(14, 0);
         }
 
-        public void SetRowColor(int channel, int row, int color)
+         public void UnsetColor(int note)
         {
-            for (int i = 0; i < 10; i++)
-            {
-                SetColor(channel, row * 10 + i, color);
-            }
+            SetColor(note, 0);
         }
 
         public void SetRowColor(int row, int color)
         {
-            SetRowColor(0, row, color);
-        }
-
-        public void UnsetRowColor(int channel, int row)
-        {
-            SetRowColor(channel, row, 0);
-        }
-
-        public void UnsetRowColor(int row)
-        {
-            SetRowColor(0, row, 0);
-        }
-
-        public void SetColumnColor(int channel, int col, int color)
-        {
             for (int i = 0; i < 10; i++)
             {
-                SetColor(channel, i * 10 + col, color);
+                SetColor(row * 10 + i, color);
             }
         }
 
+
+        public void UnsetRowColor(int row)
+        {
+            SetRowColor(row, 0);
+        }
+
+
         public void SetColumnColor(int col, int color)
         {
-            SetColumnColor(0, col, color);
-        }
-        public void UnsetColumnColor(int channel, int col)
-        {
-            SetColumnColor(channel, col, 0);
+            for (int i = 0; i < 10; i++)
+            {
+                SetColor(i * 10 + col, color);
+            }
         }
 
         public void UnsetColumnColor(int col)
         {
-            SetColumnColor(0, col, 0);
+            SetColumnColor(col, 0);
         }
 
         protected void OnChannelMessagePlayed(object sender, ChannelMessageEventArgs e)

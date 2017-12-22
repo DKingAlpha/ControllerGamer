@@ -11,13 +11,16 @@ namespace ControllerGamer.Libraries.SimInput
 {
     public static class Mouse
     {
+        public static int X => System.Windows.Forms.Control.MousePosition.X;
+        public static int Y => System.Windows.Forms.Control.MousePosition.Y;
+
         private static Int32 Coord_amp_x(int px)
         {
-            return px * 65536 / DeviceUtils.ScreenSizeX;
+            return px * 65536 / Mouse.X;
         }
         private static Int32 Coord_amp_y(int py)
         {
-            return py * 65536 / DeviceUtils.ScreenSizeY;
+            return py * 65536 / Mouse.Y;
         }
 
         public static void Move(int pixel_x, int pixel_y)

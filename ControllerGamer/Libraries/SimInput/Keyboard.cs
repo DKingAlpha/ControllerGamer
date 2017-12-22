@@ -63,6 +63,19 @@ namespace ControllerGamer.Libraries.SimInput
             }
         }
 
+
+        public static bool IsKeyDown(VK keyCode)
+        {
+            var result = WinAPI.GetAsyncKeyState((UInt16)keyCode);
+            return (result < 0);
+        }
+
+        public static bool IsKeyUp(VK keyCode)
+        {
+            return !IsKeyDown(keyCode);
+        }
+
+
         public static void KeyDown(VK virtualKeyCode)
         {
             INPUT[] input = new INPUT[1];

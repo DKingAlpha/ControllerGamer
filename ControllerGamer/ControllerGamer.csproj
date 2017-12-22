@@ -114,11 +114,11 @@
     <Compile Include="Libraries\ProfileLoader\INI.cs" />
     <Compile Include="Libraries\ProfileLoader\Profile.cs" />
     <Compile Include="Libraries\ProfileLoader\ProfileManager.cs" />
-    <Compile Include="Libraries\SimInput\DeviceUtils.cs" />
     <Compile Include="Libraries\SimInput\Keyboard.cs" />
     <Compile Include="Libraries\SimInput\MIDI.cs" />
     <Compile Include="Libraries\SimInput\Mouse.cs" />
     <Compile Include="Libraries\SimInput\Products\Launchpad.cs" />
+    <Compile Include="Libraries\SimInput\Screen.cs" />
     <Compile Include="Libraries\Windows\Types.cs" />
     <Compile Include="Libraries\Windows\WinAPI.cs" />
     <Compile Include="Program.cs" />
@@ -161,7 +161,7 @@
     <None Include="resources\icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Sanford.Multimedia.Midi\Sanford.Multimedia.Midi-master\Source\Sanford.Multimedia.Midi.csproj">
+    <ProjectReference Include="..\..\Sanford.Multimedia.Midi\Source\Sanford.Multimedia.Midi.csproj">
       <Project>{4269c72a-8d3a-4737-8f89-72eaa33ea9e1}</Project>
       <Name>Sanford.Multimedia.Midi</Name>
     </ProjectReference>

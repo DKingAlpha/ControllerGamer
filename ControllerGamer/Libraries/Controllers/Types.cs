@@ -155,17 +155,24 @@ namespace ControllerGamer.Libraries.Controllers
     }
     public class DMouseEventArgs : ControllerEventArgs
     {
-        public MouseOffset ID;
+        public MouseOffset Offset;
+        public readonly int Value;
         public readonly bool Pressed, Released;
+        public readonly int X, Y;
 
         public override string ToString()
         {
-            return String.Format("Button ID:{0} {1}", ID, Pressed ? "Pressed" : "Released");
+            return String.Format("Offset:{0} {1} Position: {2} {3}", Offset, Pressed ? "Pressed" : "Released",X ,Y);
         }
 
         public DMouseEventArgs(MouseUpdate state) : base(state)
         {
-            ID = state.Offset;
+            Offset = state.Offset;
+            Value = state.Value;
+
+            X = System.Windows.Forms.Control.MousePosition.X;
+            Y = System.Windows.Forms.Control.MousePosition.Y;
+
             if (state.Value == 0)
             {
                 Released = true;
@@ -186,6 +193,7 @@ namespace ControllerGamer.Libraries.Controllers
         public readonly int Note = -1;
         public readonly int Channel = -1;
         public readonly int Velocity = -1;
+        public readonly int DeviceID = -1;
         public MidiEventArgs(InputDevice sender, EventArgs e) : base(e)
         {
             Device = sender;
@@ -194,6 +202,7 @@ namespace ControllerGamer.Libraries.Controllers
                 Channel = msg.Message.MidiChannel;
                 Note = msg.Message.Data1;
                 Velocity = msg.Message.Data2;
+                DeviceID = Device.DeviceID;
                 if (msg.Message.Data2 > 0)
                 {
                     Pressed = true;
@@ -212,10 +221,10 @@ namespace ControllerGamer.Libraries.Controllers
             return Note != -1 ? 
                 String.Format("Note:{0} {1}   Velocity:{2}", Note.ToString(), Pressed ? "Pressed" : "Released", ((ChannelMessageEventArgs)RawState).Message.Data2) 
                 :
-                ToFullString();
+                GetDetail();
         }
 
-        public string ToFullString()
+        public string GetDetail()
         {
             string res = "";
             if (RawState is ChannelMessageEventArgs)
