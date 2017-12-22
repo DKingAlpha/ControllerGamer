@@ -95,7 +95,7 @@ namespace ControllerGamer.Libraries.ProfileLoader
             {
                 try
                 {
-                    ProfileProgramInstance = Run(ProfileProgram);
+                    if(ProfileProgramInstance == null) ProfileProgramInstance = Run(ProfileProgram);
                     if (ProfileProgramInstance != null)
                     {
                         MethodCaller = ProfileProgramInstance.GetType();
@@ -129,7 +129,6 @@ namespace ControllerGamer.Libraries.ProfileLoader
                     IsRunning = false;
                     return true;
                 }
-                ProfileProgramInstance = null;
             }
             return false;
         }

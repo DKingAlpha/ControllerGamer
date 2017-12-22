@@ -1,15 +1,16 @@
 # Controller Gamer
 
 Aiming at providing a platform where players dynamically mapping any controller to any games!
+We provide an all-in-one interface, and you need to provide the idea.
 
-`Notice` This project is still in early development, only working as a prototype. Lots of functions descripted below are to be implemented in the future. Complete documents will be released once the project is done.
+Update: Pre-Release version is avaliable. Take a peek!
 
 ## Concept:
 By using techniques including `Runtime Compiling` and `Reflection`, this project makes it possible and easy for "advanced user" to "program" in a mapping profile.
 
 Which means, providen with a template profile in a form of C# 'script', "advanced users" are able to implement their COMPLEX mapping logic in the methods, and share them in a workshop(which is still under development). The other users will be able to download the profile, check the script if they want, and load them just as a script.
 
-To simplify the work on the userside, we have provided interfaces as 'Mouse', 'Keyboard', 'MIDI', 'DeviceUtils' with varieties of methods, ensuring the final mapping works in most games.
+To simplify the work on the userside, we have provided interfaces as 'Mouse', 'Keyboard', 'MIDI', 'Screen' with varieties of methods, ensuring the final mapping works in most games.
 
 Besides, sending simple text command to the specific port will trigger a keyboard/mouse action, just like in command line. Program with that!
 
@@ -26,18 +27,16 @@ Cool stuffs you can do with this project (Example):
 * Control your game from an Android/iOS App.
 * Program a game on MIDI device itself, with patience.
 * Make your Launchpad a Windows App Launcher. ( note => WinKey+R, sleep(1) ,apppath)
-* Macro.  (Dont do it in online games, I really mean it.)
+* Macro.  (Dont do it in online games, I mean, really, dont.)
 
 ## Supported Interfaces.
 * HID(Joysticks/Keyboard/Mouse/MIDI) => Keyboard/Mouse/MIDI
+* Screen color to MIDIOUT.
+* Auxiliary Launchpad Helper class.
 * Port Listner which handles external instructions.
 
-## Working progress
-Keyboard/Mouse/MIDI/Joystick => Keyboard/Mouse/MIDI has been supported.
+Steam Workshop are to be implemented in the future:
 
-Other features are to be implemented in the future:
-* Screen utils(stream?, color?, areacolor?)
-* Steam Workshop
 
 
 ## Credits
@@ -84,7 +83,7 @@ images named in config.ini
 
 
 ### C# 'Script'
-A full template to help you understand how it works.
+A full example to help you understand how it works.
 
 ```
 using System;
@@ -118,7 +117,58 @@ namespace GameProfile
                 Thread.Sleep(15);
             }
         }
+                
+        private void SyncScreen()
+        {
+            while(true)
+            {
+                if(sync)
+                {
+                    RefreshLaunchpad();
+                }
+                Thread.Sleep(5000);
+            }
+        }
         
+        public void Stop()
+        {
+               sync = false;
+        }
+
+        private void RefreshLaunchpad()
+        {
+            Bitmap bmp = Screen.ZoomScreen(0,0,1920,1080,8,8);
+            for(int j=1;j<=8;j++)
+            {
+                for(int i=1;i<=8;i++)
+                {
+                    Color clr = bmp.GetPixel(i-1, 8-j);
+                    lpd.SetColor(i+j*10,clr.R/4, clr.G/4, clr.B/4);
+                }
+            }
+            bmp.Dispose();
+        }
+        
+        // Constructor
+        public ControllerCallbacks()
+        {
+        {
+            Logger.Log("Profile Running");
+            
+            Keyboard.FullScanCodeMode = true;   // virtual key codes might not works to some game settings, so scan mode instead.
+
+            // MIDIs.ListAll();         // helps to find out which device you want.
+            lpd = new Launchpad(MIDIs.Get("MIDIOUT2"));
+
+            Thread th = new Thread(SyncScreen);
+            th.IsBackground = true;
+            th.Start();
+                        
+            Thread th1 = new Thread(Shift);
+            th1.IsBackground = true;
+            th1.Start();
+        }
+
         // Constructor
         public ControllerCallbacks()
         {
@@ -133,19 +183,25 @@ namespace GameProfile
             th.Start();
         }
         
-        public void OnMidiEventReceived(MidiEventArgs e)                 // receiving all types of midi msgs
+       public void OnMidiEventReceived(MidiEventArgs e)
         {
-            Logger.Log(e);
-            lpd.BasePath = (string)e.AdditionalData;
-            if (e.RawState is ChannelMessageEventArgs)
+            if(e.Name.StartsWith("nanoKontrol"))     // nanoKontrol
             {
+                lpd.UnsetColumnColor(e.Note - 35);
+                lpd.SetColor( (int)(e.Velocity/12.7)*10 + (e.Note-35), (int)(e.Velocity/12.7)*10);
+            }
+            if(e.Name.StartsWith("MIDIIN"))     // Launchpad
+            {
+                int x = e.Note%10, y = e.Note/10;
                 if(e.Pressed)
                 {
-                    lpd.SetColor(e.Channel, e.Note, e.Velocity);
-                    lpd.PlayMidiFile(@"midires\gameover.mid");
-                }else
+                    UpdateMouseOnLaunchpad(x,y);
+                    lpd.SetColor(x+y*10,45);
+                    Mouse.Move(240*x,135*(9-y));
+                }
+                else
                 {
-                    lpd.UnsetColor(e.Channel,e.Note);
+                    lpd.SetColor(x+y*10,35);
                 }
             }
         }
@@ -191,8 +247,8 @@ namespace GameProfile
             }
             else
             {
-                double px = (ls_x / 65535.0) * DeviceUtils.ScreenSizeX * 0.5 * (DeviceUtils.ScreenSizeY/DeviceUtils.ScreenSizeX) + (0.5*DeviceUtils.ScreenSizeX - 0.25 * DeviceUtils.ScreenSizeY);
-                double py = (ls_y / 65535.0) * DeviceUtils.ScreenSizeY * 0.5 + 0.25* DeviceUtils.ScreenSizeY ;
+                double px = (ls_x / 65535.0) * Screen.X * 0.5 * (Screen.Y/Screen.X) + (0.5*Screen.X - 0.25 * Screen.Y);
+                double py = (ls_y / 65535.0) * Screen.Y * 0.5 + 0.25* Screen.Y ;
                 Mouse.RightClick((int)px,(int)py);
             }
             
