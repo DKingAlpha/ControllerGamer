@@ -11,30 +11,23 @@ namespace ControllerGamer.Libraries.SimInput
         public static int X => System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
         public static int Y => System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
 
-
-        private static Bitmap GetAreaImage(int x, int y, int w, int h)
-        {
-            Bitmap image = new Bitmap(w,h);
-            Graphics imgGraphics = Graphics.FromImage(image);
-            imgGraphics.CopyFromScreen(x, y, 0, 0, new Size(w,h));
-            return image;
-        }
-
         public static Color getDominantColor(int x, int y, int w, int h)
         {
-            Bitmap bmp = GetAreaImage(x, y, w, h);
-            //Used for tally
+            Bitmap bmp = new Bitmap(w, h);
+            Graphics imgGraphics = Graphics.FromImage(bmp);
+            imgGraphics.CopyFromScreen(x, y, 0, 0, new Size(w, h));
+
             int r = 0;
             int g = 0;
             int b = 0;
 
             int total = 0;
 
-            for (int x = 0; x < bmp.Width; x++)
+            for (int i = 0; i < bmp.Width; i++)
             {
-                for (int y = 0; y < bmp.Height; y++)
+                for (int j = 0; j < bmp.Height; j++)
                 {
-                    Color clr = bmp.GetPixel(x, y);
+                    Color clr = bmp.GetPixel(i, j);
 
                     r += clr.R;
                     g += clr.G;
@@ -47,7 +40,28 @@ namespace ControllerGamer.Libraries.SimInput
             g /= total;
             b /= total;
 
+            bmp.Dispose();
+            imgGraphics.Dispose();
+
             return Color.FromArgb(r, g, b);
+        }
+
+        public static Bitmap ZoomScreen(int source_x, int source_y, int source_w, int source_h,int target_w, int target_h)
+        {
+            Bitmap bmp = new Bitmap(source_w, source_h);
+            Graphics imgGraphics = Graphics.FromImage(bmp);
+            imgGraphics.CopyFromScreen(source_x, source_y, 0, 0, new Size(source_w, source_h));
+
+            Bitmap lpdimg = new Bitmap(target_w, target_h);
+            Graphics lpdgrapg = Graphics.FromImage(lpdimg);
+            lpdgrapg.DrawImage(bmp, new Rectangle(0, 0, target_w, target_h));
+
+
+            bmp.Dispose();
+            imgGraphics.Dispose();
+            lpdgrapg.Dispose();
+
+            return lpdimg;
         }
     }
 }

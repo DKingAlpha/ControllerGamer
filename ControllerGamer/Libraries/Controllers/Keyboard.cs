@@ -77,14 +77,14 @@ namespace ControllerGamer.Libraries.Controllers
 
         public void MapToProfile(Profile profile)
         {
-            if (!profile.IsCompiled)
-                profile.Compile();
-            if (profile.IsCompiled)
+            if (!profile.IsRunning)
+                profile.Start();
+            if (profile.IsRunning)
                 EventReceived += profile.OnEventReceived;
         }
         public void UnMapToProfile(Profile profile)
         {
-            if (profile.IsCompiled)
+            if (profile.IsRunning)
                 EventReceived -= profile.OnEventReceived;
         }
 

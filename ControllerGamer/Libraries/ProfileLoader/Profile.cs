@@ -29,9 +29,11 @@ namespace ControllerGamer.Libraries.ProfileLoader
     {
         public ProfileConfig Config = new ProfileConfig();
         public bool IsValid = false;
+        public bool IsRunning = false;
         public bool IsCompiled = false;
-        private object ProfileProgram;
-        private Type MethodCaller;
+        Assembly ProfileProgram = null;
+        private object ProfileProgramInstance = null;
+        private Type MethodCaller = null;
         private bool IsPrivate = true;
         
 
@@ -58,8 +60,10 @@ namespace ControllerGamer.Libraries.ProfileLoader
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Logger.Log(e);
+                Logger.Log(e.StackTrace);
                 IsValid = false;
             }
         }
@@ -70,19 +74,34 @@ namespace ControllerGamer.Libraries.ProfileLoader
             IsValid = true;
         }
 
-        public bool Compile()
+        public bool Start()
         {
-            if (IsValid)
+            if (!IsValid) return false;
+            if (!IsCompiled)
             {
                 try
                 {
-                    ProfileProgram = CompileFromSource();
-                    if (ProfileProgram != null)
+                    ProfileProgram = Compile();
+                }
+                catch (Exception e)
+                {
+                    Logger.Log(e);
+                    Logger.Log(e.StackTrace);
+                    return false;
+                }
+            }
+
+            if(IsCompiled && (!IsRunning))
+            {
+                try
+                {
+                    ProfileProgramInstance = Run(ProfileProgram);
+                    if (ProfileProgramInstance != null)
                     {
-                        MethodCaller = ProfileProgram.GetType();
+                        MethodCaller = ProfileProgramInstance.GetType();
                         if (MethodCaller != null)
                         {
-                            IsCompiled = true;
+                            IsRunning = true;
                             return true;
                         }
                     }
@@ -99,7 +118,23 @@ namespace ControllerGamer.Libraries.ProfileLoader
                 return false;
         }
 
-        private object CompileFromSource()
+        public bool Stop()
+        {
+            if (IsRunning)
+            {
+                MethodInfo mi = MethodCaller.GetMethod("Stop");
+                if (mi != null)
+                {
+                    mi.Invoke(obj: ProfileProgramInstance, parameters: new object[] { });
+                    IsRunning = false;
+                    return true;
+                }
+                ProfileProgramInstance = null;
+            }
+            return false;
+        }
+
+        private Assembly Compile()
         {
             CSharpCodeProvider objCSharpCodePrivoder = new CSharpCodeProvider();
             CompilerParameters objCompilerParameters = new CompilerParameters();
@@ -126,9 +161,14 @@ namespace ControllerGamer.Libraries.ProfileLoader
             }
             else
             {
-                Assembly objAssembly = cr.CompiledAssembly;
-                return objAssembly.CreateInstance("GameProfile.ControllerCallbacks");
+                IsCompiled = true;
+                return cr.CompiledAssembly;
             }
+        }
+
+        private object Run(Assembly ass)
+        {
+            return ass.CreateInstance("GameProfile.ControllerCallbacks");
         }
 
         public void OnEventReceived(ControllerEventArgs controllerEventArgs)
@@ -151,12 +191,12 @@ namespace ControllerGamer.Libraries.ProfileLoader
             {
                 MethodInfo mi = MethodCaller.GetMethod(CallbackName);
                 if (mi != null)
-                    mi.Invoke(obj: ProfileProgram, parameters: args);
+                    mi.Invoke(obj: ProfileProgramInstance, parameters: args);
                 else
                 {
                     mi = MethodCaller.GetMethod("OnEventReceived");
                     if (mi != null)
-                        mi.Invoke(obj: ProfileProgram, parameters: args);
+                        mi.Invoke(obj: ProfileProgramInstance, parameters: args);
                 }
             }).Start();
         }

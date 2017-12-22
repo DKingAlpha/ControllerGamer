@@ -56,7 +56,7 @@ namespace ControllerGamer.Libraries.SimInput
         #endregion
 
 
-        private void SendSysEx(params object[] content)
+        private void SendSysEx(params int[] content)
         {
             // sysex begin
             List<byte> msg = new List<byte>() { 0xF0, 0x00, 0x20, 0x29, 0x02, 0x10 };
@@ -67,6 +67,8 @@ namespace ControllerGamer.Libraries.SimInput
             }
             // sysex end
             msg.Add(247);
+
+            Midi.Device.Send(new SysExMessage(msg.ToArray()));
         }
 
         /// <summary>

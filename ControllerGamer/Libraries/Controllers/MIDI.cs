@@ -19,6 +19,7 @@ namespace ControllerGamer.Libraries.Controllers
         private InputDevice midiinput = null;
         private event ControllerEventHandler EventReceived;
         private bool Running = false;
+        private string Name = null;
 
         private void inDevice_Error(object sender, ErrorEventArgs e)
         {
@@ -32,7 +33,7 @@ namespace ControllerGamer.Libraries.Controllers
 
         private void HandlerAnyMessageReceived(object sender, EventArgs e)
         {
-            EventReceived(new MidiEventArgs((InputDevice)sender,e));
+            EventReceived(new MidiEventArgs((InputDevice)sender,e,Name));
         }
 
         public MIDI(int id)
@@ -66,13 +67,15 @@ namespace ControllerGamer.Libraries.Controllers
             {
                 try
                 {
+                    Name = InputDevice.GetDeviceCapabilities(DeviceID).name;
+
                     midiinput = new InputDevice(DeviceID);
                     midiinput.Error += inDevice_Error;
                     midiinput.ChannelMessageReceived += HandlerAnyMessageReceived;
                     midiinput.SysCommonMessageReceived += HandlerAnyMessageReceived;
                     midiinput.SysExMessageReceived += HandlerAnyMessageReceived;
                     midiinput.SysRealtimeMessageReceived += HandlerAnyMessageReceived;
-
+                    
                     midiinput.StartRecording();
                     Running = true;
                     return true;
@@ -123,17 +126,17 @@ namespace ControllerGamer.Libraries.Controllers
 
         public void MapToProfile(Profile profile)
         {
-            if (!profile.IsCompiled)
-                profile.Compile();
-            if (profile.IsCompiled)
+            if (!profile.IsRunning)
+                profile.Start();
+            if (profile.IsRunning)
                 EventReceived += profile.OnEventReceived;
         }
 
         public void UnMapToProfile(Profile profile)
         {
-            if (!profile.IsCompiled)
-                profile.Compile();
-            if (profile.IsCompiled)
+            if (!profile.IsRunning)
+                profile.Start();
+            if (profile.IsRunning)
                 EventReceived -= profile.OnEventReceived;
         }
 

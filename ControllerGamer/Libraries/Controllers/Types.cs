@@ -130,8 +130,8 @@ namespace ControllerGamer.Libraries.Controllers
             }
             else
             {
-                Pressed = true;
-                Released = false;
+                Pressed = false;
+                Released = true;
             }
         }
     }
@@ -180,8 +180,8 @@ namespace ControllerGamer.Libraries.Controllers
             }
             else
             {
-                Pressed = true;
-                Released = false;
+                Pressed = false;
+                Released = true;
             }
         }
         
@@ -194,11 +194,15 @@ namespace ControllerGamer.Libraries.Controllers
         public readonly int Channel = -1;
         public readonly int Velocity = -1;
         public readonly int DeviceID = -1;
-        public MidiEventArgs(InputDevice sender, EventArgs e) : base(e)
+        public string Name = null;
+
+        public MidiEventArgs(InputDevice sender, EventArgs e, string DeviceName) : base(e)
         {
             Device = sender;
-            if (e is ChannelMessageEventArgs msg)
+            Name = DeviceName;
+            if (e is ChannelMessageEventArgs)
             {
+                ChannelMessageEventArgs msg = (ChannelMessageEventArgs)e;
                 Channel = msg.Message.MidiChannel;
                 Note = msg.Message.Data1;
                 Velocity = msg.Message.Data2;
@@ -210,8 +214,8 @@ namespace ControllerGamer.Libraries.Controllers
                 }
                 else
                 {
-                    Pressed = true;
-                    Released = false;
+                    Pressed = false;
+                    Released = true;
                 }
             }
         }

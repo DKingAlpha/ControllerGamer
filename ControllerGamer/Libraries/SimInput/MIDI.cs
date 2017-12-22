@@ -26,6 +26,43 @@ namespace ControllerGamer.Libraries.SimInput
                 return null;
         }
 
+        public static MIDI Get(string productname)
+        {
+            foreach (var Device in LoadDevices)
+            {
+                if (Device.GetProductName().StartsWith(productname)) return Device;
+            }
+            for (int i = 0; i < OutputDevice.DeviceCount; i++)
+            {
+                MidiOutCaps midioutcap = OutputDevice.GetDeviceCapabilities(i);
+                if (midioutcap.name.StartsWith(productname))
+                {
+                    MIDI newdevice = new MIDI(i);
+                    LoadDevices.Add(newdevice);
+                    return newdevice;
+                }
+            }
+            return null;
+        }
+
+        public static string ListAll()
+        {
+            string res = "MidiOut Devices:\r\n\r\n";
+
+            for (int i = 0; i < OutputDevice.DeviceCount; i++)
+            {
+                MidiOutCaps midioutcap = OutputDevice.GetDeviceCapabilities(i);
+
+                res = res + "ControllerName: " + midioutcap.name + "\r\n";
+                res = res + "DriverVersion: " + midioutcap.driverVersion.ToString() + "\r\n";
+                res = res + "ManufacturerID: " + midioutcap.mid.ToString() + "\r\n";
+                res = res + "ProductID: " + midioutcap.pid.ToString() + "\r\n";
+                res = res + "SupportID: " + midioutcap.support.ToString() + "\r\n";
+
+                res = res + "\r\n";
+            }
+            return res;
+        }
 
     }
 

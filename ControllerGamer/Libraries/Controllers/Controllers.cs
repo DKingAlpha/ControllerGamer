@@ -96,7 +96,7 @@ namespace ControllerGamer.Libraries.Controllers
             return controllers.Count;
         }
 
-        public static Controller GetController(int index)
+        public static Controller Get(int index)
         {
             if (controllers.Count > 0)
                 return controllers[index];
@@ -116,7 +116,7 @@ namespace ControllerGamer.Libraries.Controllers
         /// </summary>
         /// <param name="controller_name"></param>
         /// <returns></returns>
-        public static Controller GetController(string controller_name)
+        public static Controller Get(string controller_name)
         {
             if (controller_name.Length > 0)
             {
