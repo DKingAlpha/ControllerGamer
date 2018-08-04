@@ -77,6 +77,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Sanford.Multimedia.Midi, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sanford.Multimedia.Midi.6.6.0\lib\net20\Sanford.Multimedia.Midi.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.4.0.1\lib\net40\SharpDX.dll</HintPath>
     </Reference>
@@ -159,12 +162,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Sanford.Multimedia.Midi\Source\Sanford.Multimedia.Midi.csproj">
-      <Project>{4269c72a-8d3a-4737-8f89-72eaa33ea9e1}</Project>
-      <Name>Sanford.Multimedia.Midi</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

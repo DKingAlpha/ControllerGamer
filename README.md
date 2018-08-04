@@ -3,7 +3,11 @@
 Aiming at providing a platform where players dynamically mapping any controller to any games!
 We provide an all-in-one interface, and you need to provide the idea.
 
-Update: Pre-Release version is avaliable. Take a peek!
+Update: Pre-Release version is avaliable. [Take a look](https://github.com/DKingCN/ControllerGamer/releases)
+
+News: Update will be postponed till enough attention to this project is received.
+
+Known Bugs: Serious memory leakage. Inconsistent interface parameters.
 
 ## Concept:
 By using techniques including `Runtime Compiling` and `Reflection`, this project makes it possible and easy for "advanced user" to "program" in a mapping profile.
@@ -15,6 +19,8 @@ To simplify the work on the userside, we have provided interfaces as 'Mouse', 'K
 Besides, sending simple text command to the specific port will trigger a keyboard/mouse action, just like in command line. Program with that!
 
 ![Protograph](https://github.com/DKingCN/ControllerGamer/raw/master/protograph.png)
+![GUI](https://github.com/DKingCN/ControllerGamer/raw/master/gui.png)
+
 
 ## What can I do with this?
 * DIY a HANDY/COMPLEX mapping profile for your favorite input device and favorite game, and program some lights effect back if it's midi device!
