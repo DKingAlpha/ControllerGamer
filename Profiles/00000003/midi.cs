@@ -40,18 +40,18 @@ namespace GameProfile
                 {
                     //lpd.Midi.PlayMidiFile(@"midires\gameover.mid");
                     
-                    lpd.SetColumnColor(e.Channel, e.Note%10, e.Velocity);         // param channel can be omitted if 0
-                    lpd.SetRowColor(e.Channel, e.Note/10, e.Velocity);
-                    lpd.SetColor(e.Channel, e.Note + 11, e.Velocity);
-                    lpd.SetColor(e.Note + 9, e.Velocity);                      // default channel 0
-                    lpd.SetColor(e.Channel, e.Note - 11, e.Velocity);
-                    lpd.SetColor(e.Channel, e.Note - 9, e.Velocity);
+                    lpd.SetColumnColor(e.Note%10, e.Velocity);         // param channel can be omitted if 0
+                    lpd.SetRowColor(e.Note/10, e.Velocity);
+                    // lpd.SetColor(e.Note + 11, e.Velocity);
+                    // lpd.SetColor(e.Note + 9, e.Velocity);                      // default channel 0
+                    // lpd.SetColor(e.Note - 11, e.Velocity);
+                    // lpd.SetColor(e.Note - 9, e.Velocity);
                 }else
                 {
-                    lpd.UnsetColor(e.Note+11);
-                    lpd.UnsetColor(e.Note+9);
-                    lpd.UnsetColor(e.Note-11);
-                    lpd.UnsetColor(e.Note-9);
+                    // lpd.UnsetColor(e.Note+11);
+                    // lpd.UnsetColor(e.Note+9);
+                    // lpd.UnsetColor(e.Note-11);
+                    // lpd.UnsetColor(e.Note-9);
                     lpd.UnsetColumnColor(e.Note%10);
                     lpd.UnsetRowColor(e.Note/10);
                 }

@@ -1,4 +1,4 @@
-These profiles are written in different time of developping, some of them might not work properly.
+These profiles are written in different stage of developping, some of them might not work properly.
 
 Profile ID is generated randomly, preparing for further development of Steam workshop.
 The ID can be manually changed but not affect anything tho.

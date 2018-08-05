@@ -18,9 +18,13 @@ To simplify the work on the userside, we have provided interfaces as 'Mouse', 'K
 
 Besides, sending simple text command to the specific port will trigger a keyboard/mouse action, just like in command line. Program with that!
 
+<<<<<<< HEAD
 ![Protograph](https://github.com/DKingCN/ControllerGamer/raw/master/protograph.png)
 ![GUI](https://github.com/DKingCN/ControllerGamer/raw/master/gui.png)
 
+=======
+![Protograph](https://github.com/DKingCN/ControllerGamer/blob/master/protograph.png)
+>>>>>>> fa9526847ce30b40337a38d9e8931b902cd95134
 
 ## What can I do with this?
 * DIY a HANDY/COMPLEX mapping profile for your favorite input device and favorite game, and program some lights effect back if it's midi device!
